@@ -37,6 +37,8 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/h2-console/**").permitAll()
+            .requestMatchers("/v3/**").permitAll() //Campo apenas para analise do avaliador(a)
+            .requestMatchers("/swagger-ui/**").permitAll() //Campo apenas para analise do avaliador(a)
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/auth/resetpassword").permitAll()
