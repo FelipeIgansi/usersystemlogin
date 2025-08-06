@@ -30,7 +30,7 @@ public class SecurityFilter extends OncePerRequestFilter {
       FilterChain filterChain
   ) throws ServletException, IOException {
     var token = this.recoverToken(request);
-    var login = tokenService.validateToken(token);
+    var login = tokenService.verifyTokenAndGetSubject(token);
 
     if (login != null) {
       User user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found"));

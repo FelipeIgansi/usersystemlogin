@@ -3,10 +3,12 @@ package com.usersystemlogin.controller;
 import com.usersystemlogin.domain.user.User;
 import com.usersystemlogin.dto.LoginRequestDTO;
 import com.usersystemlogin.dto.RegisterRequestDTO;
+import com.usersystemlogin.dto.ResetPasswordRequestDTO;
 import com.usersystemlogin.dto.ResponseDTO;
 import com.usersystemlogin.infra.security.TokenService;
 import com.usersystemlogin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,21 +27,40 @@ public class AuthController {
   private final TokenService tokenService;
 
   @PostMapping("/login")
-  public ResponseEntity login(@RequestBody LoginRequestDTO body){
+  public ResponseEntity login(@RequestBody LoginRequestDTO body) {
     User user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
-    if(passwordEncoder.matches(body.password(), user.getPassword())) {
+    if (passwordEncoder.matches(body.password(), user.getPassword())) {
       String token = this.tokenService.generateToken(user);
       return ResponseEntity.ok(new ResponseDTO(user.getName(), token));
     }
     return ResponseEntity.badRequest().build();
   }
 
+  @PostMapping("/resetpassword")
+  public ResponseEntity resetPassword(@RequestBody ResetPasswordRequestDTO body) {
+    Optional<User> optionalUser = this.repository.findByEmail(body.email());
+
+    if (optionalUser.isEmpty()) {
+      return ResponseEntity.badRequest().body("Usuário não encontrado.");
+    }
+
+    User user = optionalUser.get();
+
+    if (tokenService.verifyTokenAndGetSubject(body.token()) == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido.");
+    }
+
+    user.setPassword(passwordEncoder.encode(body.password()));
+    repository.save(user);
+
+    return ResponseEntity.ok(new ResponseDTO(user.getName(), body.token()));
+  }
 
   @PostMapping("/register")
-  public ResponseEntity register(@RequestBody RegisterRequestDTO body){
+  public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
     Optional<User> user = this.repository.findByEmail(body.email());
 
-    if(user.isEmpty()) {
+    if (user.isEmpty()) {
       User newUser = new User();
       newUser.setPassword(passwordEncoder.encode(body.password()));
       newUser.setEmail(body.email());
