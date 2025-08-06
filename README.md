@@ -75,6 +75,6 @@ Endpoints principais:
 | ------ | -------------------------- | -------------------------- |
 | POST   | `/api/auth/register`       | Cadastro de novo usuário   |
 | POST   | `/api/auth/login`          | Login e geração de token   |
-| POST   | `/api/auth/reset-password` | Reset de senha             |
+| POST   | `/api/auth/resetpassword` | Reset de senha             |
 | GET    | `/api/home`                | Página inicial autenticada |
 
