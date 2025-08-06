@@ -43,6 +43,7 @@ public class AuthController {
       User newUser = new User();
       newUser.setPassword(passwordEncoder.encode(body.password()));
       newUser.setEmail(body.email());
+      newUser.setCpf(body.cpf());
       newUser.setName(body.name());
       this.repository.save(newUser);
 

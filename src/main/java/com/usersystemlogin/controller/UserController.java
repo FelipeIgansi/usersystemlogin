@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
   @GetMapping
-  public ResponseEntity<?> getUser(Authentication authentication) {
+  public ResponseEntity getUser(Authentication authentication) {
     try {
       User user = (User) authentication.getPrincipal();
       UserResponseDTO userResponse = new UserResponseDTO(
           user.getId(),
           user.getName(),
-          user.getEmail()
+          user.getEmail(),
+          user.getCpf()
       );
 
       return ResponseEntity.ok(userResponse);
