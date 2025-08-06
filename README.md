@@ -40,7 +40,7 @@ O projeto segue boas práticas de arquitetura e organização de código:
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/FelipeIgansi/usersystemlogin.git
+   git clone https://github.com/FelipeIgansi/usersystemlogin-back.git
    cd nome-do-repositorio (usersystemlogin)
 
 🔐 Segurança
